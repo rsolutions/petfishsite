@@ -1,0 +1,38 @@
+<?php
+
+Class model_blocos extends model{
+	
+	public function carregar($codigo){
+		
+		$retorno = array();
+		
+		$conexao = new mysql();
+		$coisas = $conexao->Executar("SELECT * FROM blocos WHERE codigo='$codigo' ");
+		$data = $coisas->fetch_object();
+
+		$retorno['id'] = $data->id;
+		$retorno['codigo'] = $data->codigo;
+		$retorno['tipo'] = $data->tipo;
+		$retorno['titulo'] = $data->titulo;
+		$retorno['imagem'] = $data->imagem;
+		$retorno['posicao'] = $data->posicao;
+		$retorno['descricao'] = $data->conteudo;
+		$retorno['mostrar_titulo'] = $data->mostrar_titulo;
+		$retorno['botao_titulo'] = $data->botao_titulo;
+		
+		if($data->endereco_padrao){
+			$retorno['endereco'] = DOMINIO.$data->endereco_padrao;
+		} else {
+			$retorno['endereco'] = $data->endereco;
+		}
+		
+		$retorno['imagem_fundo'] = $data->imagem_fundo;
+		$retorno['imagem_fundo_tipo'] = $data->imagem_fundo_tipo;
+		
+		// cores
+		$layout = new model_layout();
+		$retorno['cores'] = $layout->lista_cores($codigo);
+		
+		return $retorno;
+	}
+}
